@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft, Mail, Save, StickyNote, User } from "lucide-react";
 import { toast } from "sonner";
-import { fetchTicket, updateTicket } from "@/lib/tickets/api";
+import { getTicket, updateTicket } from "@/services/api";
 import type { Ticket, TicketStatus } from "@/lib/tickets/types";
 import { TICKET_STATUSES } from "@/lib/tickets/types";
 import { formatDateTime } from "@/lib/tickets/format";
@@ -43,22 +43,36 @@ export const Route = createFileRoute("/tickets/$ticketId")({
 
 function TicketDetailsPage() {
   const { ticketId } = Route.useParams();
-  const router = useRouter();
   const [ticket, setTicket] = useState<Ticket | undefined>();
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState<TicketStatus>("Open");
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    fetchTicket(ticketId).then((data) => {
-      if (!active) return;
-      setTicket(data);
-      if (data) setStatus(data.status);
-      setLoading(false);
-    });
+    const loadTicket = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getTicket(ticketId);
+        if (active) {
+          setTicket(data);
+          setStatus(data.status);
+        }
+      } catch (err) {
+        if (active) {
+          setError("Failed to load ticket");
+          toast.error("Failed to load ticket");
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+    loadTicket();
     return () => {
       active = false;
     };
@@ -71,13 +85,10 @@ function TicketDetailsPage() {
     setSaving(true);
     try {
       const updated = await updateTicket(ticket.id, { status, newNote: note });
-      if (updated) {
-        setTicket(updated);
-        setStatus(updated.status);
-        setNote("");
-        toast.success("Changes saved");
-        router.invalidate();
-      }
+      setTicket(updated);
+      setStatus(updated.status);
+      setNote("");
+      toast.success("Changes saved");
     } catch {
       toast.error("Could not save changes.");
     } finally {
@@ -98,6 +109,11 @@ function TicketDetailsPage() {
 
         {loading ? (
           <LoadingState label="Loading ticket..." />
+        ) : error ? (
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="text-destructive mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
         ) : !ticket ? (
           <div className="rounded-xl border border-border bg-card">
             <EmptyState

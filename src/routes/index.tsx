@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
-import { fetchTickets } from "@/lib/tickets/api";
+import { toast } from "sonner";
+import { getTickets } from "@/services/api";
 import type { Ticket } from "@/lib/tickets/types";
 import { Navbar } from "@/components/tickets/Navbar";
 import { SearchBar } from "@/components/tickets/SearchBar";
@@ -34,33 +35,34 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilterValue>("All");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    fetchTickets().then((data) => {
-      if (active) {
-        setTickets(data);
-        setLoading(false);
+    const loadTickets = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getTickets(search || undefined, status === "All" ? undefined : status);
+        if (active) {
+          setTickets(data);
+        }
+      } catch (err) {
+        if (active) {
+          setError("Failed to load tickets");
+          toast.error("Failed to load tickets");
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
       }
-    });
+    };
+    loadTickets();
     return () => {
       active = false;
     };
-  }, []);
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return tickets.filter((t) => {
-      const matchesStatus = status === "All" || t.status === status;
-      const matchesSearch =
-        !q ||
-        t.id.toLowerCase().includes(q) ||
-        t.customerName.toLowerCase().includes(q) ||
-        t.subject.toLowerCase().includes(q);
-      return matchesStatus && matchesSearch;
-    });
-  }, [tickets, search, status]);
+  }, [search, status]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +71,7 @@ function Dashboard() {
         <div className="mb-6 flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">Support Tickets</h1>
           <p className="text-sm text-muted-foreground">
-            {loading ? "Loading tickets..." : `${filtered.length} of ${tickets.length} tickets`}
+            {loading ? "Loading tickets..." : error ? error : `${tickets.length} tickets`}
           </p>
         </div>
 
@@ -88,7 +90,12 @@ function Dashboard() {
 
         {loading ? (
           <LoadingState label="Loading tickets..." />
-        ) : filtered.length === 0 ? (
+        ) : error ? (
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="text-destructive mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
+        ) : tickets.length === 0 ? (
           <div className="rounded-xl border border-border bg-card">
             <EmptyState
               action={
@@ -99,7 +106,7 @@ function Dashboard() {
             />
           </div>
         ) : (
-          <TicketTable tickets={filtered} />
+          <TicketTable tickets={tickets} />
         )}
       </main>
     </div>

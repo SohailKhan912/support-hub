@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { createTicket } from "@/lib/tickets/api";
+import { createTicket } from "@/services/api";
 import type { NewTicketInput } from "@/lib/tickets/types";
 import { Navbar } from "@/components/tickets/Navbar";
 import { TicketForm } from "@/components/tickets/TicketForm";
