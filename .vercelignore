@@ -1,0 +1,14 @@
+.env
+.env.local
+.env.*.local
+node_modules
+.git
+.gitignore
+*.log
+*.md
+coverage
+*.tsbuildinfo
+dist
+.vscode
+.idea
+*.bak
