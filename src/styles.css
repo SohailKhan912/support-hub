@@ -46,6 +46,12 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-status-open: var(--status-open);
+  --color-status-open-bg: var(--status-open-bg);
+  --color-status-progress: var(--status-progress);
+  --color-status-progress-bg: var(--status-progress-bg);
+  --color-status-closed: var(--status-closed);
+  --color-status-closed-bg: var(--status-closed-bg);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
