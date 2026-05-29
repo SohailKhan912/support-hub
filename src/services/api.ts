@@ -3,6 +3,7 @@ import type { NewTicketInput, Ticket, TicketStatus } from "@/lib/tickets/types";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   "https://support-hub-backend-3hit.onrender.com";
+
 // Helper to convert backend Ticket to frontend Ticket
 function transformBackendTicket(backendTicket: any): Ticket {
   return {
@@ -32,6 +33,7 @@ export async function getTickets(
 
   const res = await fetch(`${API_BASE_URL}/tickets?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch tickets");
+
   const backendTickets = await res.json();
   return backendTickets.map(transformBackendTicket);
 }
@@ -40,6 +42,7 @@ export async function getTickets(
 export async function getTicket(ticketId: string): Promise<Ticket> {
   const res = await fetch(`${API_BASE_URL}/tickets/${ticketId}`);
   if (!res.ok) throw new Error("Ticket not found");
+
   const backendTicket = await res.json();
   return transformBackendTicket(backendTicket);
 }
@@ -58,7 +61,9 @@ export async function createTicket(data: NewTicketInput): Promise<Ticket> {
       description: data.description,
     }),
   });
+
   if (!res.ok) throw new Error("Failed to create ticket");
+
   const backendTicket = await res.json();
   return transformBackendTicket(backendTicket);
 }
