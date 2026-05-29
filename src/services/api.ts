@@ -73,9 +73,14 @@ export async function updateTicket(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      status: data.status,
+      new_note: data.newNote,
+    }),
   });
+
   if (!res.ok) throw new Error("Failed to update ticket");
+
   const backendTicket = await res.json();
   return transformBackendTicket(backendTicket);
 }
