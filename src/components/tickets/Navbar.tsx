@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Headset, Plus } from "lucide-react";
+import { Headset, Moon, Plus, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/use-theme";
 
 export function Navbar() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-card/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
@@ -16,12 +19,22 @@ export function Navbar() {
           </div>
         </Link>
 
-        <Button asChild size="sm">
-          <Link to="/tickets/new">
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">New Ticket</span>
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+          <Button asChild size="sm">
+            <Link to="/tickets/new">
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">New Ticket</span>
+            </Link>
+          </Button>
+        </div>
       </div>
     </header>
   );

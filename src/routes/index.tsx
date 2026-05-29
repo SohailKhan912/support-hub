@@ -11,6 +11,7 @@ import { TicketTable } from "@/components/tickets/TicketTable";
 import { LoadingState } from "@/components/tickets/LoadingState";
 import { EmptyState } from "@/components/tickets/EmptyState";
 import { Button } from "@/components/ui/button";
+import { TicketStats } from "@/components/tickets/TicketStats";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -74,6 +75,8 @@ function Dashboard() {
             {loading ? "Loading tickets..." : error ? error : `${tickets.length} tickets`}
           </p>
         </div>
+
+        {!loading && !error && <TicketStats tickets={tickets} />}
 
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex-1">
