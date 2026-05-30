@@ -91,6 +91,10 @@ function Dashboard() {
           </p>
         </div>
 
+        <TicketStats tickets={allTickets} className="mb-6" />
+
+
+
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex-1">
             <SearchBar value={search} onChange={setSearch} />
