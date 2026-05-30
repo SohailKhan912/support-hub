@@ -8,6 +8,7 @@ import { Navbar } from "@/components/tickets/Navbar";
 import { SearchBar } from "@/components/tickets/SearchBar";
 import { StatusFilter, type StatusFilterValue } from "@/components/tickets/StatusFilter";
 import { TicketTable } from "@/components/tickets/TicketTable";
+import { TicketStats } from "@/components/tickets/TicketStats";
 import { LoadingState } from "@/components/tickets/LoadingState";
 import { EmptyState } from "@/components/tickets/EmptyState";
 import { Button } from "@/components/ui/button";
