@@ -8,6 +8,7 @@ import { Navbar } from "@/components/tickets/Navbar";
 import { SearchBar } from "@/components/tickets/SearchBar";
 import { StatusFilter, type StatusFilterValue } from "@/components/tickets/StatusFilter";
 import { TicketTable } from "@/components/tickets/TicketTable";
+import { TicketStats } from "@/components/tickets/TicketStats";
 import { LoadingState } from "@/components/tickets/LoadingState";
 import { EmptyState } from "@/components/tickets/EmptyState";
 import { Button } from "@/components/ui/button";
@@ -32,10 +33,25 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [allTickets, setAllTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilterValue>("All");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    getTickets()
+      .then((data) => {
+        if (active) setAllTickets(data);
+      })
+      .catch(() => {
+        /* stats are non-critical; ignore */
+      });
+    return () => {
+      active = false;
+    };
+  }, [tickets]);
 
   useEffect(() => {
     let active = true;
@@ -74,6 +90,10 @@ function Dashboard() {
             {loading ? "Loading tickets..." : error ? error : `${tickets.length} tickets`}
           </p>
         </div>
+
+        <TicketStats tickets={allTickets} className="mb-6" />
+
+
 
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex-1">
