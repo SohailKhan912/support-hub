@@ -33,10 +33,25 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [allTickets, setAllTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilterValue>("All");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    getTickets()
+      .then((data) => {
+        if (active) setAllTickets(data);
+      })
+      .catch(() => {
+        /* stats are non-critical; ignore */
+      });
+    return () => {
+      active = false;
+    };
+  }, [tickets]);
 
   useEffect(() => {
     let active = true;
