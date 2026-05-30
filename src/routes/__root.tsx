@@ -73,14 +73,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Support Hub - Customer Ticket Management System" },
+      { name: "description", content: "A modern customer support ticket management platform built with TanStack Start, React, TypeScript and FastAPI for efficient ticket tracking and resolution." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Support Hub - Customer Ticket Management System" },
+      { property: "og:description", content: "A modern customer support ticket management platform built with TanStack Start, React, TypeScript and FastAPI for efficient ticket tracking and resolution." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Support Hub - Customer Ticket Management System" },
+      { name: "twitter:description", content: "A modern customer support ticket management platform built with TanStack Start, React, TypeScript and FastAPI for efficient ticket tracking and resolution." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3929ddc6-35fa-4ffa-8c63-ed82a1229160/id-preview-eb2b2fb6--a3f82ee7-aa4a-4ad4-8aca-53fb6e4aadb9.lovable.app-1780067051904.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3929ddc6-35fa-4ffa-8c63-ed82a1229160/id-preview-eb2b2fb6--a3f82ee7-aa4a-4ad4-8aca-53fb6e4aadb9.lovable.app-1780067051904.png" },
     ],
     links: [
       {
